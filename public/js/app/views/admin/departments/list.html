@@ -1,0 +1,161 @@
+<div ng-include="'js/app/views/admin/partials/admin-header.html'"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Lista de Departamentos</h1>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createDepartmentModal" ng-click="vm.openCreateDepartmentModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill me-1" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/></svg>
+                Crear Departamento
+            </button>
+        </div>
+    </div>
+
+
+    <div ng-if="vm.isLoading" class="alert alert-info mt-3 text-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        Cargando departamentos...
+    </div>
+    <div ng-if="vm.errorMessage" class="alert alert-danger mt-3">
+        <strong>Error:</strong> {{ vm.errorMessage }}
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="department in vm.departments">
+                    <td>{{ department.id }}</td>
+                    <td>{{ department.name }}</td>
+                    <td class="text-center">
+                        <div class="btn-group" role="group" aria-label="Acciones de departamento">
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" ng-click="vm.openEditDepartmentModal(department)" title="Editar Departamento">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr ng-if="!vm.departments || vm.departments.length === 0">
+                    <td colspan="3" class="text-center py-4">
+                        <span ng-if="vm.searchTerm">No se encontraron departamentos para los filtros aplicados.</span>
+                        <span ng-if="!vm.searchTerm">No hay departamentos registrados.</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación (si aplica para departamentos) -->
+    <nav aria-label="Page navigation" ng-if="vm.pagination.total > vm.pagination.per_page && vm.departments.length > 0">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                <a class="page-link" href="#" ng-click="vm.loadDepartments(vm.pagination.current_page - 1)">Anterior</a>
+            </li>
+            <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                <a class="page-link" href="#" ng-click="vm.loadDepartments(vm.pagination.current_page + 1)">Siguiente</a>
+            </li>
+        </ul>
+        <p class="text-center text-muted">Página {{vm.pagination.current_page}} de {{vm.pagination.last_page}}.
+            Mostrando {{vm.pagination.from}}-{{vm.pagination.to}} de {{vm.pagination.total}} departamentos.</p>
+    </nav>
+
+    <div class="mt-4">
+         <button type="button" class="btn btn-outline-secondary" ng-click="vm.goBackToEmployees()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill me-1" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+            </svg>
+            Volver a Empleados
+        </button>
+    </div>
+
+    <!-- Modal para Crear Departamento -->
+    <div class="modal fade" id="createDepartmentModal" tabindex="-1" aria-labelledby="createDepartmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createDepartmentModalLabel">Crear Nuevo Departamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-if="vm.createSuccessMessage" class="alert alert-success">
+                        {{ vm.createSuccessMessage }}
+                    </div>
+                    <div ng-if="vm.createErrorMessage" class="alert alert-danger">
+                        <strong>Error:</strong> {{ vm.createErrorMessage }}
+                        <ul ng-if="vm.createValidationErrors" class="mt-2 mb-0">
+                            <li ng-repeat="(field, errors) in vm.createValidationErrors"><strong>{{ field }}:</strong> {{ errors.join(', ') }}</li>
+                        </ul>
+                    </div>
+
+                    <form name="vm.createDepartmentForm" ng-submit="vm.saveNewDepartment()" novalidate>
+                        <div class="mb-3">
+                            <label for="new_department_name" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="new_department_name" name="name" ng-model="vm.newDepartment.name" required>
+                            <div ng-messages="vm.createDepartmentForm.name.$error" ng-if="(vm.createDepartmentForm.name.$touched && vm.createDepartmentForm.name.$invalid) || (vm.createDepartmentForm.$submitted && vm.createDepartmentForm.name.$invalid)" class="text-danger mt-1">
+                                <div ng-message="required">El nombre es requerido.</div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer pb-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" ng-disabled="vm.createDepartmentForm.$invalid || vm.isSavingNewDepartment">
+                                <span ng-if="!vm.isSavingNewDepartment">Guardar Departamento</span>
+                                <span ng-if="vm.isSavingNewDepartment"><span class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Departamento -->
+    <div class="modal fade" id="editDepartmentModal" tabindex="-1" aria-labelledby="editDepartmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDepartmentModalLabel">Editar Departamento <span ng-if="vm.departmentToEdit.name">- {{vm.departmentToEdit.name}}</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-if="vm.editSuccessMessage" class="alert alert-success">
+                        {{ vm.editSuccessMessage }}
+                    </div>
+                    <div ng-if="vm.editErrorMessage" class="alert alert-danger">
+                        <strong>Error:</strong> {{ vm.editErrorMessage }}
+                        <ul ng-if="vm.editValidationErrors" class="mt-2 mb-0">
+                            <li ng-repeat="(field, errors) in vm.editValidationErrors"><strong>{{ field }}:</strong> {{ errors.join(', ') }}</li>
+                        </ul>
+                    </div>
+
+                    <form name="vm.editDepartmentForm" ng-submit="vm.updateExistingDepartment()" novalidate ng-if="vm.departmentToEdit">
+                        <div class="mb-3">
+                            <label for="edit_department_name" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="edit_department_name" name="name" ng-model="vm.departmentToEdit.name" required>
+                            <div ng-messages="vm.editDepartmentForm.name.$error" ng-if="(vm.editDepartmentForm.name.$touched && vm.editDepartmentForm.name.$invalid) || (vm.editDepartmentForm.$submitted && vm.editDepartmentForm.name.$invalid)" class="text-danger mt-1">
+                                <div ng-message="required">El nombre es requerido.</div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer pb-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" ng-disabled="vm.editDepartmentForm.$invalid || vm.isSavingEditedDepartment">
+                                <span ng-if="!vm.isSavingEditedDepartment">Guardar Cambios</span>
+                                <span ng-if="vm.isSavingEditedDepartment"><span class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

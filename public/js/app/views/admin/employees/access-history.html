@@ -1,0 +1,161 @@
+<div ng-include="'js/app/views/admin/partials/admin-header.html'"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Historial de Accesos <span ng-if="vm.employeeName">- {{ vm.employeeName }}</span></h1>
+        <div class="btn-group">
+            <button class="btn btn-success" ng-click="vm.downloadPdf()" ng-disabled="vm.isLoading || vm.isDownloadingPdf">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill me-1" viewBox="0 0 16 16">
+                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
+                </svg>
+                Descargar PDF
+            </button>
+            <button class="btn btn-secondary" ng-click="vm.goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill me-1" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                </svg>
+                Volver
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Fecha -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            Filtrar por Fecha del Intento
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-4 col-md-5">
+                    <label for="historyStartDate" class="form-label">Desde:</label>
+                    <input type="date" class="form-control" id="historyStartDate" ng-model="vm.filterStartDate">
+                </div>
+                <div class="col-lg-4 col-md-5">
+                    <label for="historyEndDate" class="form-label">Hasta:</label>
+                    <input type="date" class="form-control" id="historyEndDate" ng-model="vm.filterEndDate">
+                </div>
+                <div class="col-lg-4 col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary me-2" ng-click="vm.applyDateFilters()">Aplicar</button>
+                    <button type="button" class="btn btn-outline-secondary" ng-click="vm.clearDateFilters()">Limpiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="vm.isLoading" class="alert alert-info text-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        Cargando historial...
+    </div>
+    <div ng-if="vm.errorMessage" class="alert alert-danger">{{ vm.errorMessage }}</div>
+
+    <div ng-if="!vm.isLoading && vm.accessLogs.length === 0 && !vm.errorMessage"
+        class="alert alert-warning text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+            class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
+            <path
+                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.064.293.006.399.287.47l.45.082.082.38-.229.287a.5.5 0 0 1-.732-.01l-.23-.298c-.533-.68-.164-1.83.37-2.39l.738-3.468c.064-.293-.006-.399-.287-.47l-.45-.082-.082-.38.229-.287a.5.5 0 0 1 .732.01zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+        </svg>
+        No se encontraron registros de acceso para este empleado
+    </div>
+
+    <div ng-if="!vm.isLoading && !vm.errorMessage && vm.accessLogs.length > 0" class="card shadow-sm">
+        <div class="card-header">
+            Registros de Acceso
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Fecha y Hora del Intento</th>
+                            <th class="text-center">Resultado</th>
+                            <th>Identificación Intentada</th>
+                            <th>Razón</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="log in vm.accessLogs"
+                            ng-class="{'table-success': log.access_result === 'concedido', 'table-danger': log.access_result.startsWith('denegado-'), 'table-warning': log.access_result === 'no-registrado'}">
+                            <td>{{ log.attempted_at | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td class="text-center">
+                                <span class="badge" ng-class="{
+                                    'bg-success': log.access_result === 'concedido',
+                                    'bg-danger': log.access_result.startsWith('denegado-'),
+                                    'bg-warning text-dark': log.access_result === 'no-registrado'
+                                }">{{ log.access_result }}</span>
+                            </td>
+                            <td class="text-muted">{{ log.identification_attempted || 'N/A' }}</td>
+                            <td>{{ log.failure_reason || 'Acceso exitoso' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Paginación para el historial -->
+        <div class="card-footer" ng-if="vm.pagination.last_page > 1">
+            <nav aria-label="Paginación del historial" ng-if="vm.pagination.total > vm.pagination.per_page">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                        <a class="page-link" href="#" ng-click="vm.loadHistory(1)">&laquo; Primera</a>
+                    </li>
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                        <a class="page-link" href="#"
+                            ng-click="vm.loadHistory(vm.pagination.current_page - 1)">Anterior</a>
+                    </li>
+                    <!-- Ejemplo de números de página (requiere vm.getPagesArray en el controlador) -->
+                    <li class="page-item"
+                        ng-repeat="page in vm.getPagesArray(vm.pagination.last_page, vm.pagination.current_page) track by $index"
+                        ng-class="{active: page === vm.pagination.current_page}">
+                        <a class="page-link" href="#" ng-click="vm.loadHistory(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                        <a class="page-link" href="#"
+                            ng-click="vm.loadHistory(vm.pagination.current_page + 1)">Siguiente</a>
+                    </li>
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                        <a class="page-link" href="#" ng-click="vm.loadHistory(vm.pagination.last_page)">Última
+                            &raquo;</a>
+                    </li>
+                </ul>
+                <p class="text-center text-muted small">Página {{vm.pagination.current_page}} de
+                    {{vm.pagination.last_page}}. Mostrando {{vm.pagination.from}}-{{vm.pagination.to}} de
+                    {{vm.pagination.total}} registros.</p>
+            </nav>
+        </div>
+    </div>
+    <!-- Paginación para el historial -->
+    <div class="card-footer" ng-if="vm.pagination.last_page > 1">
+        <nav aria-label="Paginación del historial" ng-if="vm.pagination.total > vm.pagination.per_page">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                    <a class="page-link" href="#" ng-click="vm.loadHistory(1)">&laquo; Primera</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                    <a class="page-link" href="#" ng-click="vm.loadHistory(vm.pagination.current_page - 1)">Anterior</a>
+                </li>
+
+                <!-- NÚMEROS DE PÁGINA GENERADOS AQUÍ -->
+                <li class="page-item"
+                    ng-repeat="page in vm.getPagesArray(vm.pagination.last_page, vm.pagination.current_page) track by $index"
+                    ng-class="{active: page === vm.pagination.current_page}">
+                    <a class="page-link" href="#" ng-click="vm.loadHistory(page)">{{ page }}</a>
+                </li>
+
+                <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                    <a class="page-link" href="#"
+                        ng-click="vm.loadHistory(vm.pagination.current_page + 1)">Siguiente</a>
+                </li>
+                <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                    <a class="page-link" href="#" ng-click="vm.loadHistory(vm.pagination.last_page)">Última &raquo;</a>
+                </li>
+            </ul>
+            <p class="text-center text-muted small">Página {{vm.pagination.current_page}} de
+                {{vm.pagination.last_page}}. Mostrando {{vm.pagination.from}}-{{vm.pagination.to}} de
+                {{vm.pagination.total}} registros.</p>
+        </nav>
+    </div>
+
+</div>

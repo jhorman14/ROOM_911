@@ -1,0 +1,55 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            class="bi bi-door-open-fill me-2" viewBox="0 0 16 16">
+                            <path
+                                d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-1 0V1H4V.5a.5.5 0 0 0-1 0V1H2.5A1.5 1.5 0 0 0 1 2.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z" />
+                        </svg>
+                        Acceso ROOM_911
+                    </h4>
+                </div>
+                 <div class="card-body p-4 p-md-5">
+                    <p class="text-center text-muted mb-4">Ingrese su número de identificación para registrar su
+                        entrada.</p>
+
+                    <form ng-submit="vm.login()" name="employeeLoginForm" novalidate autocomplete="off">
+                        <div class="mb-3">
+                            <label for="identification_id" class="form-label">Número de Identificación</label>
+                            <input type="text" class="form-control form-control-lg" id="identification_id"
+                                name="identification_id" ng-model="vm.credentials.identification_id" required
+                                placeholder="Su número de identificación" aria-describedby="identificationHelp">
+                            <div ng-messages="employeeLoginForm.identification_id.$error"
+                                ng-if="(employeeLoginForm.identification_id.$touched && employeeLoginForm.identification_id.$invalid) || (employeeLoginForm.$submitted && employeeLoginForm.identification_id.$invalid)"
+                                class="text-danger mt-1">
+                                <div ng-message="required">El número de identificación es requerido.</div>
+                            </div>
+                            <div id="identificationHelp" class="form-text mt-1">Asegúrese de ingresar el número
+                                completo.</div>
+                        </div>
+                        <div ng-if="vm.successMessage"
+                            class="alert alert-success mt-3 animate__animated animate__fadeIn" role="alert">
+                            <h5 class="alert-heading">¡Éxito!</h5>
+                            <p class="mb-0">{{ vm.successMessage }}</p>
+                        </div>
+                        <div ng-if="vm.errorMessage" class="alert alert-danger mt-3 animate__animated animate__shakeX"
+                            role="alert">
+                            {{ vm.errorMessage }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4" ng-disabled="vm.isLoggingIn || (employeeLoginForm.$invalid && employeeLoginForm.$submitted)">
+                            <span ng-if="!vm.isLoggingIn">Ingresar</span>
+                            <span ng-if="vm.isLoggingIn"><span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span> Ingresando...</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <a href="#!/login" class="text-secondary">Volver a selección de login</a>
+                </div>
+            </div>
+        </div>
+    </div>

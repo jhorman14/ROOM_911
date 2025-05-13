@@ -1,0 +1,148 @@
+<div ng-include="'js/app/views/admin/partials/admin-header.html'"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Lista de Administradores</h1>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAdminModal" ng-click="vm.openCreateAdminModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill me-1" viewBox="0 0 16 16">
+                    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                </svg>
+                Crear Administrador
+            </button>
+        </div>
+    </div>
+
+    <!-- Aquí podrías añadir filtros si los necesitas más adelante -->
+
+    <div ng-if="vm.isLoading" class="alert alert-info mt-3 text-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        Cargando administradores...
+    </div>
+    <div ng-if="vm.errorMessage" class="alert alert-danger mt-3">
+        <strong>Error:</strong> {{ vm.errorMessage }}
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">Administradores Registrados</h5>
+        </div>
+        <div class="card-body p-0"> <!-- p-0 para que la tabla ocupe todo el card-body si no hay padding -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered mb-0"> <!-- mb-0 para quitar margen inferior de la tabla dentro del card -->
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre de Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="admin in vm.admins">
+                            <td>{{ admin.id }}</td>
+                            <td>{{ admin.username }}</td>
+                        </tr>
+                        <tr ng-if="!vm.admins || vm.admins.length === 0">
+                            <td colspan="3" class="text-center py-4">
+                                <span>No hay administradores registrados.</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginación (si aplica para administradores) -->
+    <!-- <nav aria-label="Page navigation" ng-if="vm.pagination.total > vm.pagination.per_page && vm.admins.length > 0"> ... </nav> -->
+
+    <!-- Modal para Crear Administrador -->
+    <div class="modal fade" id="createAdminModal" tabindex="-1" aria-labelledby="createAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createAdminModalLabel">Crear Nuevo Administrador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-if="vm.createSuccessMessage" class="alert alert-success">{{ vm.createSuccessMessage }}</div>
+                    <div ng-if="vm.createErrorMessage" class="alert alert-danger">
+                        <strong>Error:</strong> {{ vm.createErrorMessage }}
+                        <ul ng-if="vm.createValidationErrors" class="mt-2 mb-0">
+                            <li ng-repeat="(field, errors) in vm.createValidationErrors"><strong>{{ field }}:</strong> {{ errors.join(', ') }}</li>
+                        </ul>
+                    </div>
+
+                    <form name="vm.createAdminForm" ng-submit="vm.saveNewAdmin()" novalidate>
+                        <div class="mb-3">
+                            <label for="new_admin_username" class="form-label">Nombre de Usuario:</label>
+                            <input type="text" class="form-control" id="new_admin_username" name="username" ng-model="vm.newAdmin.username" required>
+                            <div ng-messages="vm.createAdminForm.username.$error" ng-if="vm.createAdminForm.username.$touched || vm.createAdminForm.$submitted" class="text-danger mt-1">
+                                <div ng-message="required">El nombre de usuario es requerido.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_admin_password" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="new_admin_password" name="password" ng-model="vm.newAdmin.password" required ng-minlength="8">
+                            <div ng-messages="vm.createAdminForm.password.$error" ng-if="vm.createAdminForm.password.$touched || vm.createAdminForm.$submitted" class="text-danger mt-1">
+                                <div ng-message="required">La contraseña es requerida.</div>
+                                <div ng-message="minlength">La contraseña debe tener al menos 8 caracteres.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_admin_password_confirmation" class="form-label">Confirmar Contraseña:</label>
+                            <input type="password" class="form-control" id="new_admin_password_confirmation" name="password_confirmation" ng-model="vm.newAdmin.password_confirmation" required data-password-match="vm.newAdmin.password">
+                            <div ng-messages="vm.createAdminForm.password_confirmation.$error" ng-if="vm.createAdminForm.password_confirmation.$touched || vm.createAdminForm.$submitted" class="text-danger mt-1">
+                                <div ng-message="required">La confirmación de contraseña es requerida.</div>
+                                <div ng-message="passwordMatch">Las contraseñas no coinciden.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer pb-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" ng-disabled="vm.createAdminForm.$invalid || vm.isSavingNewAdmin">
+                                <span ng-if="!vm.isSavingNewAdmin">Guardar Administrador</span>
+                                <span ng-if="vm.isSavingNewAdmin"><span class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+         <button type="button" class="btn btn-outline-secondary" ng-click="vm.goBackToEmployees()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill me-1" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+            </svg>
+            Volver a Empleados
+        </button>
+    </div>
+
+</div>
+<!-- Directiva para validar que las contraseñas coincidan -->
+<script>
+    angular.module('miApp').directive('passwordMatch', [function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+                var firstPassword = '#' + attrs.passwordMatch; // Asume que passwordMatch tiene el ID del campo de la primera contraseña
+                // Si passwordMatch es una expresión de Angular (vm.newAdmin.password), necesitas observarla
+                attrs.$observe('passwordMatch', function(value) {
+                    // Revalida cuando el valor de la primera contraseña cambia
+                    ctrl.$validate();
+                });
+
+                ctrl.$validators.passwordMatch = function (modelValue, viewValue) {
+                    var value = modelValue || viewValue;
+                    // Obtener el valor de la primera contraseña directamente del scope si es una expresión
+                    var firstPasswordValue = scope.$eval(attrs.passwordMatch);
+                    return value === firstPasswordValue;
+                };
+            }
+        };
+    }]);
+</script>

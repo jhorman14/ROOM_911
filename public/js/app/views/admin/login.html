@@ -1,0 +1,46 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-fill-lock me-2" viewBox="0 0 16 16">
+                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4zm7 0a1 1 0 0 1 1-1v-1a2 2 0 0 1 2-2h.094C12.545 8.007 13.5 7 13.5 7S14.455 8.007 15.906 9H16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1h-1v1a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1h-1v1a1 1 0 0 1-1-1v-1H9V9a1 1 0 0 1-1-1H7a1 1 0 0 1-1 1H2.5a.5.5 0 0 0-.5.5V12h-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5H2a.5.5 0 0 0 .5-.5v-1Zm3.5-10.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1-.5-.5ZM11 5.5a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1Z"/>
+                        </svg>
+                        Acceso Administrador
+                    </h4>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form ng-submit="vm.login()" name="adminLoginForm" novalidate autocomplete="off">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nombre de Usuario:</label>
+                            <input type="text" class="form-control form-control-lg" id="username" name="username" ng-model="vm.credentials.username" required placeholder="Usuario">
+                            <div ng-messages="adminLoginForm.username.$error" ng-if="(adminLoginForm.username.$touched && adminLoginForm.username.$invalid) || (adminLoginForm.$submitted && adminLoginForm.username.$invalid)" class="text-danger mt-1">
+                                <div ng-message="required">El nombre de usuario es requerido.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control form-control-lg" id="password" name="password" ng-model="vm.credentials.password" required placeholder="Contraseña">
+                            <div ng-messages="adminLoginForm.password.$error" ng-if="(adminLoginForm.password.$touched && adminLoginForm.password.$invalid) || (adminLoginForm.$submitted && adminLoginForm.password.$invalid)" class="text-danger mt-1">
+                                <div ng-message="required">La contraseña es requerida.</div>
+                            </div>
+                        </div>
+
+                        <div ng-if="vm.error" class="alert alert-danger mt-3 animate__animated animate__shakeX" role="alert">
+                            {{ vm.error }}
+                        </div>
+
+                        <button type="submit" class="btn btn-dark btn-lg w-100 mt-4" ng-disabled="vm.isLoggingIn || (adminLoginForm.$invalid && adminLoginForm.$submitted)">
+                            <span ng-if="!vm.isLoggingIn">Ingresar</span>
+                            <span ng-if="vm.isLoggingIn"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Ingresando...</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <a href="#!/login" class="text-secondary">Volver a selección de login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

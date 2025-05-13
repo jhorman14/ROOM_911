@@ -626,6 +626,48 @@
             }
         }
 
+        // --- Gestión del foco para el modal de carga CSV ---
+            const uploadCsvModalEl = document.getElementById('uploadCsvModal'); // ID de tu modal de carga CSV
+
+            if (uploadCsvModalEl) {
+                // Evento que se dispara cuando el modal está a punto de mostrarse
+                uploadCsvModalEl.addEventListener('show.bs.modal', function (event) {
+                    // event.relatedTarget es el elemento que disparó el modal
+                    if (event.relatedTarget) {
+                        csvUploadModalTriggerButton = event.relatedTarget;
+                        $log.info('Modal de carga CSV (#uploadCsvModal) a punto de mostrarse, disparado por:', csvUploadModalTriggerButton);
+                    } else {
+                        $log.warn('Modal de carga CSV (#uploadCsvModal) se está mostrando sin un event.relatedTarget (quizás programáticamente sin especificarlo).');
+                    }
+                });
+
+                // Evento que se dispara inmediatamente cuando se llama al método hide
+                uploadCsvModalEl.addEventListener('hide.bs.modal', function () {
+                    $log.info('Modal de carga CSV (#uploadCsvModal) comenzando a ocultarse (hide.bs.modal).');
+                    // Si el foco está dentro del modal, muévelo al body temporalmente.
+                    if (document.activeElement && uploadCsvModalEl && uploadCsvModalEl.contains(document.activeElement)) {
+                        const activeElementInsideModal = document.activeElement;
+                        activeElementInsideModal.blur(); // Quitar foco del elemento dentro del modal
+                        document.body.focus(); // Mover el foco al body como medida segura
+                        $log.info('Foco quitado del elemento activo y movido temporalmente al body desde el modal de carga CSV.');
+                    }
+                });
+
+                // Evento que se dispara cuando el modal se ha terminado de ocultar
+                uploadCsvModalEl.addEventListener('hidden.bs.modal', function () {
+                    $log.info('Modal de carga CSV (#uploadCsvModal) completamente oculto (hidden.bs.modal).');
+                    if (csvUploadModalTriggerButton) {
+                        $log.info('Devolviendo foco a (csvUploadModal):', csvUploadModalTriggerButton);
+                        $timeout(function() { csvUploadModalTriggerButton.focus(); }, 0);
+                    } else {
+                        $log.warn('No se encontró el botón disparador (csvUploadModalTriggerButton) para devolver el foco. Intentando enfocar el body.');
+                        $timeout(function() { document.body.focus(); }, 0);
+                    }
+                });
+            } else {
+                $log.warn("Elemento del modal #uploadCsvModal no encontrado para la gestión de foco. Asegúrate de que el ID es correcto.");
+            }
+
         // Llamar a la función de inicialización.
         // Envolver en $timeout para asegurar que el DOM esté listo.
         $timeout(initializeModalFocusLogic, 0);

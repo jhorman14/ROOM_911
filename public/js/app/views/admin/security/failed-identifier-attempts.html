@@ -1,0 +1,122 @@
+<div ng-include="'js/app/views/admin/partials/admin-header.html'"></div>
+
+<div class="container mt-4" ng-controller="FailedIdentifierAttemptsController as vm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Intentos de Acceso con Identificador Inexistente</h1>
+        <button class="btn btn-secondary" ng-click="vm.goBack()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill me-1" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+            </svg>
+            Volver
+        </button>
+    </div>
+
+    <!-- Filtros de Fecha y Botón de Descarga -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            Filtros y Acciones
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-3 col-md-6">
+                    <label for="filterStartDate" class="form-label">Desde:</label>
+                    <input type="date" id="filterStartDate" class="form-control form-control-sm" ng-model="vm.filterStartDate">
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label for="filterEndDate" class="form-label">Hasta:</label>
+                    <input type="date" id="filterEndDate" class="form-control form-control-sm" ng-model="vm.filterEndDate">
+                </div>
+                <div class="col-lg-6 col-md-12 d-flex flex-wrap justify-content-start justify-content-lg-end mt-3 mt-lg-0">
+                    <div class="btn-group me-2 mb-2 mb-lg-0" role="group">
+                        <button class="btn btn-primary btn-sm" ng-click="vm.applyDateFilters()" ng-disabled="vm.isLoading">
+                            <i class="fas fa-filter"></i> Aplicar
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" ng-click="vm.clearDateFilters()" ng-disabled="vm.isLoading">
+                            <i class="fas fa-times"></i> Limpiar
+                        </button>
+                    </div>
+                    <button class="btn btn-success btn-sm mb-2 mb-lg-0" ng-click="vm.downloadPdf()" ng-disabled="vm.isLoading || vm.isDownloadingPdf">
+                        <span ng-if="vm.isDownloadingPdf" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        <svg ng-if="!vm.isDownloadingPdf" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill me-1" viewBox="0 0 16 16">
+                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
+                        </svg>
+                        {{ vm.isDownloadingPdf ? 'Descargando...' : 'Descargar PDF' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de carga -->
+    <div ng-if="vm.isLoading" class="alert alert-info text-center">
+        <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        Cargando intentos...
+    </div>
+
+    <!-- Mensaje de error -->
+    <div ng-if="!vm.isLoading && vm.errorMessage" class="alert alert-danger">
+        <strong>Error:</strong> {{ vm.errorMessage }}
+    </div>
+
+    <!-- Resultados -->
+    <div class="card shadow-sm" ng-if="!vm.isLoading && !vm.errorMessage">
+        <div class="card-header" ng-if="vm.failedAttempts.length > 0">
+            Registros Encontrados
+        </div>
+        <div class="card-body">
+            <div ng-if="vm.failedAttempts.length > 0">
+                <p class="text-muted small mb-2">Mostrando {{ vm.pagination.from || 0 }} - {{ vm.pagination.to || 0 }} de {{ vm.pagination.total || 0 }} intentos.</p>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered table-sm">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Identificación Intentada</th>
+                                <th>Fecha y Hora</th>                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="attempt in vm.failedAttempts">
+                                <td>{{ attempt.identification_attempted }}</td>
+                                <td>{{ (attempt.attempted_at || attempt.created_at) | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mensaje si no hay intentos -->
+            <div ng-if="vm.failedAttempts.length === 0" class="alert alert-info text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-circle-fill me-2" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.064.293.006.399.287.47l.45.082.082.38-.229.287a.5.5 0 0 1-.732-.01l-.23-.298c-.533-.68-.164-1.83.37-2.39l.738-3.468c.064-.293-.006-.399-.287-.47l-.45-.082-.082-.38.229-.287a.5.5 0 0 1 .732.01zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                </svg>
+                No se han registrado intentos de acceso con identificadores de trabajador inexistentes para los filtros aplicados.
+            </div>
+        </div>
+        <!-- Paginación -->
+        <div class="card-footer" ng-if="vm.pagination.last_page > 1 && vm.failedAttempts.length > 0">
+            <nav aria-label="Paginación de intentos fallidos">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                        <a class="page-link" href="#" ng-click="!vm.isLoading && vm.loadAttempts(1)">&laquo;&laquo;</a>
+                    </li>
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === 1}">
+                        <a class="page-link" href="#" ng-click="!vm.isLoading && vm.loadAttempts(vm.pagination.current_page - 1)">&laquo;</a>
+                    </li>
+                    <li class="page-item" ng-repeat="page in vm.getPagesArray(vm.pagination.last_page, vm.pagination.current_page)" ng-class="{active: page === vm.pagination.current_page}">
+                        <a class="page-link" href="#" ng-click="!vm.isLoading && vm.loadAttempts(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                        <a class="page-link" href="#" ng-click="!vm.isLoading && vm.loadAttempts(vm.pagination.current_page + 1)">&raquo;</a>
+                    </li>
+                    <li class="page-item" ng-class="{disabled: vm.pagination.current_page === vm.pagination.last_page}">
+                        <a class="page-link" href="#" ng-click="!vm.isLoading && vm.loadAttempts(vm.pagination.last_page)">&raquo;&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

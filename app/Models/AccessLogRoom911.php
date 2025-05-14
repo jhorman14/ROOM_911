@@ -10,7 +10,15 @@ class AccessLogRoom911 extends Model
 {
     use HasFactory;
 
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     protected $table = 'access_logs_room911'; // Asegúrate de que coincida con el nombre de tu tabla
+    
 
     protected $fillable = [
         'employee_id',

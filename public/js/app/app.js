@@ -45,19 +45,26 @@ angular.module('miApp', ['ngRoute'])
                 controllerAs: 'vm',
                 resolve: { authenticated: checkAdminAuth }
             })
+            .when('/admin/security/failed-identifier-attempts', {
+                templateUrl: 'js/app/views/admin/security/failed-identifier-attempts.html', // CORREGIR ESTA RUTA
+                controller: 'FailedIdentifierAttemptsController',
+                controllerAs: 'vm',
+                resolve: { authenticated: checkAdminAuth }
+            })
+
 
             .otherwise({
-                redirectTo: '/login'
+                    redirectTo: '/login'
+                });
             });
-    });
 
-function checkAdminAuth($q, $location, AdminAuthService) {
-    var deferred = $q.defer();
-    if (AdminAuthService.isAdminLoggedIn()) { // <--- Asegúrate que usa este método
-        deferred.resolve();
-    } else {
-        deferred.reject();
-        $location.path('/login/admin'); // O a donde deba ir si no está autenticado
-    }
-    return deferred.promise;
-}
+        function checkAdminAuth($q, $location, AdminAuthService) {
+            var deferred = $q.defer();
+            if (AdminAuthService.isAdminLoggedIn()) { // <--- Asegúrate que usa este método
+                deferred.resolve();
+            } else {
+                deferred.reject();
+                $location.path('/login/admin'); // O a donde deba ir si no está autenticado
+            }
+            return deferred.promise;
+        }

@@ -2,9 +2,9 @@
     angular.module('miApp')
         .factory('AdminAuthService', AdminAuthService);
     
-    AdminAuthService.$inject = ['$http', '$q', '$window']; // Inyectar $window
-    
-    function AdminAuthService($http, $q, $window) { // Añadir $window
+    AdminAuthService.$inject = ['$http', '$q', '$window', '$location', '$log']; // Inyectar $window, $location y $log
+
+    function AdminAuthService($http, $q, $window, $location, $log) { // Añadir $window, $location y $log
         var service = {};
     
         service.login = function (credentials) {
@@ -22,35 +22,51 @@
             return $window.localStorage.getItem('adminAuthToken');
         };
 
+        service.getCurrentAdmin = function () {
+            var adminData = $window.localStorage.getItem('currentAdmin');
+            return adminData ? JSON.parse(adminData) : null;
+        };
+
         
 
         service.logout = function () {
-            var deferred = $q.defer();
+             $log.debug('AdminAuthService: logout() function has been called.');
             var token = service.getToken();
     
             if (!token) {
-                deferred.resolve(); // No hay token, ya está deslogueado
-                return deferred.promise;
+                $log.info('AdminAuthService: No token found, already logged out or session expired.');
+                clearAdminSessionData();
+                $location.path('/login/admin'); // Asegurar redirección incluso si no había token
+                return $q.resolve(); // Devolver una promesa resuelta
             }
     
             // Aquí podrías enviar una petición al backend para invalidar el token (opcional)
-            $http.post('/api/admin/logout', {}, {
+            return $http.post('/api/admin/logout', {}, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
                 .then(function (response) {
-                    deferred.resolve(response);
+                    $log.info('AdminAuthService: Logout API call successful.');
+                    return response;
                 })
                 .catch(function (error) {
-                    deferred.reject(error);
+                    $log.error('AdminAuthService: Logout API call failed. Still proceeding with client-side logout.', error);
+                    // Aunque la API falle, procedemos a desloguear del cliente
+                    return $q.reject(error); // O $q.resolve() si quieres que el .finally se ejecute igual
                 })
                 .finally(function () {
-                    $window.localStorage.removeItem('adminAuthToken'); // Usar adminAuthToken y $window
+                    $log.info('AdminAuthService: Clearing local session data and redirecting.');
+                    clearAdminSessionData();
+                    $location.path('/login/admin'); // Redirigir a la página de login de admin
                 });
     
-            return deferred.promise;
         };
+
+        function clearAdminSessionData() {
+            $window.localStorage.removeItem('adminAuthToken');
+            $window.localStorage.removeItem('currentAdmin');
+        }
     
         return service;
     }

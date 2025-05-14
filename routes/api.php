@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\AccessLogController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\EmployeeAuthController;
+use App\Http\Controllers\Api\SecurityController;
+
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 Route::post('/employee/login', [EmployeeAuthController::class, 'login']);
@@ -18,8 +20,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
     Route::patch('/employees/{employee}/toggle-access', [EmployeeController::class, 'toggleAccess']); // Nueva ruta
     Route::post('/employees/upload-csv', [EmployeeController::class, 'uploadCsv']);
-    Route::get('employees/{employee}/access-history', [EmployeeController::class, 'getAccessHistory']); // Nueva ruta para el historial
+    Route::get('employees/{employee}/access-history', [EmployeeController::class, 'getAccessHistory']);
+    Route::get('admin/security/failed-identifier-logins', [SecurityController::class, 'getFailedIdentifierAttempts'])->name('admin.api.security.failed_identifier_logins'); // Ajustado el nombre de la ruta también por consistencia
     Route::get('/employees/{employee}/access-history/pdf', [EmployeeController::class, 'downloadAccessHistoryPdf'])->name('employees.accessHistory.pdf');
+    Route::get('admin/security/failed-identifier-logins/pdf', [SecurityController::class, 'downloadFailedIdentifierAttemptsPdf'])->name('admin.api.security.failed_identifier_logins.pdf');
     Route::apiResource('admins', AdminController::class)->only(['index', 'store']);
     Route::get('/departments', [DepartmentController::class, 'index']);
     Route::post('/departments', [DepartmentController::class, 'store']);

@@ -4,16 +4,30 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Lista de Empleados</h1>
         <div>
-           <!-- Botón para abrir el modal de creación -->
-            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#createEmployeeModal" ng-click="vm.openCreateEmployeeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill me-1" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/></svg>
+            <!-- Botón para abrir el modal de creación -->
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+                data-bs-target="#createEmployeeModal" ng-click="vm.openCreateEmployeeModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-plus-circle-fill me-1" viewBox="0 0 16 16">
+                    <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                </svg>
                 Crear Empleado
             </button>
             <!-- El botón de Cargar por CSV se mantiene igual -->
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadCsvModal">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-up-fill me-1" viewBox="0 0 16 16"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.207V12.5a.5.5 0 0 1-1 0V8.207L6.354 9.854z"/></svg>
+            <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#uploadCsvModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-file-earmark-arrow-up-fill me-1" viewBox="0 0 16 16">
+                    <path
+                        d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.207V12.5a.5.5 0 0 1-1 0V8.207L6.354 9.854z" />
+                </svg>
                 Cargar por CSV
             </button>
+            <!-- Botón para ver accesos fallidos -->
+            <a class="btn btn-warning" href="#!/admin/security/failed-identifier-attempts">
+                <i class="fas fa-user-times me-1"></i> <!-- Ejemplo de icono, añadido me-1 para espaciado -->
+                Accesos Fallidos (ID Inexistente)
+            </a>
         </div>
     </div>
 
@@ -22,7 +36,7 @@
             Filtros
         </div>
         <div class="card-body">
-            <div class="row g-3 align-items-center"> 
+            <div class="row g-3 align-items-center">
                 <div class="col-lg-3 col-md-6">
                     <label for="searchTerm" class="form-label">Buscar</label>
                     <input type="text" class="form-control" id="searchTerm" ng-model="vm.searchTerm"
@@ -39,14 +53,16 @@
                 </div>
                 <div class="col-lg-2 col-md-4">
                     <label for="startDate" class="form-label">Fecha Desde</label>
-                    <input type="date" class="form-control" id="startDate" ng-model="vm.filterStartDate" ng-change="vm.applyFilters()">
+                    <input type="date" class="form-control" id="startDate" ng-model="vm.filterStartDate"
+                        ng-change="vm.applyFilters()">
                 </div>
                 <div class="col-lg-2 col-md-4">
                     <label for="endDate" class="form-label">Fecha Hasta</label>
-                    <input type="date" class="form-control" id="endDate" ng-model="vm.filterEndDate" ng-change="vm.applyFilters()">
+                    <input type="date" class="form-control" id="endDate" ng-model="vm.filterEndDate"
+                        ng-change="vm.applyFilters()">
                 </div>
                 <div class="col-lg-2 col-md-4 d-flex align-items-end">
-                    <label class="form-label">&nbsp;</label> 
+                    <label class="form-label">&nbsp;</label>
                     <button type="button" class="btn btn-secondary w-100" ng-click="vm.clearFilters()">Limpiar
                         Filtros</button>
                 </div>
@@ -102,7 +118,9 @@
                                         d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.271l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.575zm.53 3.52a7.003 7.003 0 0 0-.046-.352l.98-.172c.017.1.03.2.044.304l-.978.22zm-.717 1.37c.03.171.044.344.046.52l.978-.22a7.995 7.995 0 0 1-.044-.304l-.98.172zm-.985 1.299a7.003 7.003 0 0 0 .299.985l.976-.219a6.997 6.997 0 0 1-.342-1.126l-.933.36zm-.71 1.37c.171.03.344.044.52.046l.22-.978a6.995 6.995 0 0 1-.304-.044l.172.98zm-1.299.985a7.003 7.003 0 0 0 .985.299l.219-.976a6.997 6.997 0 0 1-1.126-.342l.36.933zm-1.37.71c.271.03.439.044.592.046l.136-.986a7.017 7.017 0 0 1-.654-.047l.136.986zM8 16a8 8 0 0 1-.589-.022l.074-.997A7 7 0 0 0 8 15v1zm-2.004-.45a7.003 7.003 0 0 0 .985.299l-.219.976a8.002 8.002 0 0 1-1.126-.342l.36-.933zm-1.37-.71a7.01 7.01 0 0 0 .439.271l-.493.87a8.025 8.025 0 0 1-.979-.654l.615-.789a6.996 6.996 0 0 0 .418.302zm-1.834-1.79a6.99 6.99 0 0 0 .653.796l-.724.69c-.27-.285-.52-.59-.747-.91l.818.575zm-.53-3.52a7.003 7.003 0 0 0 .046.352l-.98.172c-.017-.1-.03-.2-.044-.304l.978-.22zm.717-1.37c-.03-.171-.044-.344-.046-.52l-.978.22a7.995 7.995 0 0 1 .044.304l.98-.172zm.985-1.299a7.003 7.003 0 0 0-.299-.985l-.976.219a6.997 6.997 0 0 1 .342 1.126l.933-.36zm.71-1.37c-.171-.03-.344-.044-.52-.046l-.22.978a6.995 6.995 0 0 1 .304.044l-.172-.98zM12.5 8a.5.5 0 0 1-.5.5H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5a.5.5 0 0 1 1 0V8h2.5a.5.5 0 0 1 .5.5z" />
                                 </svg>
                             </button>
-                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEmployeeModal" ng-click="vm.openEditEmployeeModal(employee)" title="Editar Empleado">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#editEmployeeModal" ng-click="vm.openEditEmployeeModal(employee)"
+                                title="Editar Empleado">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                     <path
@@ -156,12 +174,15 @@
 
     <!-- El menú de admin inferior se elimina ya que sus funciones están ahora en el header -->
 
-     <!-- Modal para Editar Empleado -->
-    <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+    <!-- Modal para Editar Empleado -->
+    <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editEmployeeModalLabel">Editar Empleado <span ng-if="vm.employeeToEdit.name">- {{vm.employeeToEdit.name}} {{vm.employeeToEdit.last_name}}</span></h5>
+                    <h5 class="modal-title" id="editEmployeeModalLabel">Editar Empleado <span
+                            ng-if="vm.employeeToEdit.name">- {{vm.employeeToEdit.name}}
+                            {{vm.employeeToEdit.last_name}}</span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -171,50 +192,69 @@
                     <div ng-if="vm.editErrorMessage" class="alert alert-danger">
                         <strong>Error:</strong> {{ vm.editErrorMessage }}
                         <ul ng-if="vm.editValidationErrors" class="mt-2 mb-0">
-                            <li ng-repeat="(field, errors) in vm.editValidationErrors"><strong>{{ field }}:</strong> {{ errors.join(', ') }}</li>
+                            <li ng-repeat="(field, errors) in vm.editValidationErrors"><strong>{{ field }}:</strong> {{
+                                errors.join(', ') }}</li>
                         </ul>
                     </div>
 
-                    <form name="vm.editEmployeeForm" ng-submit="vm.updateExistingEmployee()" novalidate ng-if="vm.employeeToEdit">
+                    <form name="vm.editEmployeeForm" ng-submit="vm.updateExistingEmployee()" novalidate
+                        ng-if="vm.employeeToEdit">
                         <div class="mb-3">
                             <label for="edit_employee_name" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="edit_employee_name" name="name" ng-model="vm.employeeToEdit.name" required>
-                            <div ng-messages="vm.editEmployeeForm.name.$error" ng-if="(vm.editEmployeeForm.name.$touched && vm.editEmployeeForm.name.$invalid) || (vm.editEmployeeForm.$submitted && vm.editEmployeeForm.name.$invalid)" class="text-danger mt-1">
+                            <input type="text" class="form-control" id="edit_employee_name" name="name"
+                                ng-model="vm.employeeToEdit.name" required>
+                            <div ng-messages="vm.editEmployeeForm.name.$error"
+                                ng-if="(vm.editEmployeeForm.name.$touched && vm.editEmployeeForm.name.$invalid) || (vm.editEmployeeForm.$submitted && vm.editEmployeeForm.name.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El nombre es requerido.</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="edit_employee_last_name" class="form-label">Apellido:</label>
-                            <input type="text" class="form-control" id="edit_employee_last_name" name="last_name" ng-model="vm.employeeToEdit.last_name" required>
-                            <div ng-messages="vm.editEmployeeForm.last_name.$error" ng-if="(vm.editEmployeeForm.last_name.$touched && vm.editEmployeeForm.last_name.$invalid) || (vm.editEmployeeForm.$submitted && vm.editEmployeeForm.last_name.$invalid)" class="text-danger mt-1">
+                            <input type="text" class="form-control" id="edit_employee_last_name" name="last_name"
+                                ng-model="vm.employeeToEdit.last_name" required>
+                            <div ng-messages="vm.editEmployeeForm.last_name.$error"
+                                ng-if="(vm.editEmployeeForm.last_name.$touched && vm.editEmployeeForm.last_name.$invalid) || (vm.editEmployeeForm.$submitted && vm.editEmployeeForm.last_name.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El apellido es requerido.</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="edit_employee_identification_id" class="form-label">Número de Identificación:</label>
-                            <input type="text" class="form-control" id="edit_employee_identification_id" name="identification_id" ng-model="vm.employeeToEdit.identification_id" required>
-                            <div ng-messages="vm.editEmployeeForm.identification_id.$error" ng-if="(vm.editEmployeeForm.identification_id.$touched && vm.editEmployeeForm.identification_id.$invalid) || (vm.editEmployeeForm.$submitted && vm.editEmployeeForm.identification_id.$invalid)" class="text-danger mt-1">
+                            <label for="edit_employee_identification_id" class="form-label">Número de
+                                Identificación:</label>
+                            <input type="text" class="form-control" id="edit_employee_identification_id"
+                                name="identification_id" ng-model="vm.employeeToEdit.identification_id" required>
+                            <div ng-messages="vm.editEmployeeForm.identification_id.$error"
+                                ng-if="(vm.editEmployeeForm.identification_id.$touched && vm.editEmployeeForm.identification_id.$invalid) || (vm.editEmployeeForm.$submitted && vm.editEmployeeForm.identification_id.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El número de identificación es requerido.</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="edit_employee_department_id" class="form-label">Departamento:</label>
-                            <select class="form-select" id="edit_employee_department_id" name="department_id" ng-model="vm.employeeToEdit.department_id" ng-options="dept.id as dept.name for dept in vm.departments" required>
+                            <select class="form-select" id="edit_employee_department_id" name="department_id"
+                                ng-model="vm.employeeToEdit.department_id"
+                                ng-options="dept.id as dept.name for dept in vm.departments" required>
                                 <option value="">Seleccione un departamento</option>
                             </select>
-                            <div ng-messages="vm.editEmployeeForm.department_id.$error" ng-if="(vm.editEmployeeForm.department_id.$touched && vm.editEmployeeForm.department_id.$invalid) || (vm.editEmployeeForm.department_id.$submitted && vm.editEmployeeForm.department_id.$invalid)" class="text-danger mt-1">
+                            <div ng-messages="vm.editEmployeeForm.department_id.$error"
+                                ng-if="(vm.editEmployeeForm.department_id.$touched && vm.editEmployeeForm.department_id.$invalid) || (vm.editEmployeeForm.department_id.$submitted && vm.editEmployeeForm.department_id.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El departamento es requerido.</div>
                             </div>
                         </div>
 
                         <div class="modal-footer pb-0">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary" ng-disabled="vm.editEmployeeForm.$invalid || vm.isSavingEditedEmployee">
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary"
+                                ng-disabled="vm.editEmployeeForm.$invalid || vm.isSavingEditedEmployee">
                                 <span ng-if="!vm.isSavingEditedEmployee">Guardar Cambios</span>
-                                <span ng-if="vm.isSavingEditedEmployee"><span class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
+                                <span ng-if="vm.isSavingEditedEmployee"><span
+                                        class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
                             </button>
                         </div>
                     </form>
@@ -224,7 +264,8 @@
     </div>
 
     <!-- Modal para Crear Empleado -->
-    <div class="modal fade" id="createEmployeeModal" tabindex="-1" aria-labelledby="createEmployeeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createEmployeeModal" tabindex="-1" aria-labelledby="createEmployeeModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -238,50 +279,68 @@
                     <div ng-if="vm.createErrorMessage" class="alert alert-danger">
                         <strong>Error:</strong> {{ vm.createErrorMessage }}
                         <ul ng-if="vm.createValidationErrors" class="mt-2 mb-0">
-                            <li ng-repeat="(field, errors) in vm.createValidationErrors"><strong>{{ field }}:</strong> {{ errors.join(', ') }}</li>
+                            <li ng-repeat="(field, errors) in vm.createValidationErrors"><strong>{{ field }}:</strong>
+                                {{ errors.join(', ') }}</li>
                         </ul>
                     </div>
 
                     <form name="vm.createEmployeeForm" ng-submit="vm.saveNewEmployee()" novalidate>
                         <div class="mb-3">
                             <label for="new_employee_name" class="form-label">Nombre:</label>
-                            <input type="text" class="form-control" id="new_employee_name" name="name" ng-model="vm.newEmployee.name" required>
-                            <div ng-messages="vm.createEmployeeForm.name.$error" ng-if="(vm.createEmployeeForm.name.$touched && vm.createEmployeeForm.name.$invalid) || (vm.createEmployeeForm.$submitted && vm.createEmployeeForm.name.$invalid)" class="text-danger mt-1">
+                            <input type="text" class="form-control" id="new_employee_name" name="name"
+                                ng-model="vm.newEmployee.name" required>
+                            <div ng-messages="vm.createEmployeeForm.name.$error"
+                                ng-if="(vm.createEmployeeForm.name.$touched && vm.createEmployeeForm.name.$invalid) || (vm.createEmployeeForm.$submitted && vm.createEmployeeForm.name.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El nombre es requerido.</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="new_employee_last_name" class="form-label">Apellido:</label>
-                            <input type="text" class="form-control" id="new_employee_last_name" name="last_name" ng-model="vm.newEmployee.last_name" required>
-                            <div ng-messages="vm.createEmployeeForm.last_name.$error" ng-if="(vm.createEmployeeForm.last_name.$touched && vm.createEmployeeForm.last_name.$invalid) || (vm.createEmployeeForm.$submitted && vm.createEmployeeForm.last_name.$invalid)" class="text-danger mt-1">
+                            <input type="text" class="form-control" id="new_employee_last_name" name="last_name"
+                                ng-model="vm.newEmployee.last_name" required>
+                            <div ng-messages="vm.createEmployeeForm.last_name.$error"
+                                ng-if="(vm.createEmployeeForm.last_name.$touched && vm.createEmployeeForm.last_name.$invalid) || (vm.createEmployeeForm.$submitted && vm.createEmployeeForm.last_name.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El apellido es requerido.</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="new_employee_identification_id" class="form-label">Número de Identificación:</label>
-                            <input type="text" class="form-control" id="new_employee_identification_id" name="identification_id" ng-model="vm.newEmployee.identification_id" required>
-                            <div ng-messages="vm.createEmployeeForm.identification_id.$error" ng-if="(vm.createEmployeeForm.identification_id.$touched && vm.createEmployeeForm.identification_id.$invalid) || (vm.createEmployeeForm.identification_id.$submitted && vm.createEmployeeForm.identification_id.$invalid)" class="text-danger mt-1">
+                            <label for="new_employee_identification_id" class="form-label">Número de
+                                Identificación:</label>
+                            <input type="text" class="form-control" id="new_employee_identification_id"
+                                name="identification_id" ng-model="vm.newEmployee.identification_id" required>
+                            <div ng-messages="vm.createEmployeeForm.identification_id.$error"
+                                ng-if="(vm.createEmployeeForm.identification_id.$touched && vm.createEmployeeForm.identification_id.$invalid) || (vm.createEmployeeForm.identification_id.$submitted && vm.createEmployeeForm.identification_id.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El número de identificación es requerido.</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="new_employee_department_id" class="form-label">Departamento:</label>
-                            <select class="form-select" id="new_employee_department_id" name="department_id" ng-model="vm.newEmployee.department_id" ng-options="dept.id as dept.name for dept in vm.departments" required>
+                            <select class="form-select" id="new_employee_department_id" name="department_id"
+                                ng-model="vm.newEmployee.department_id"
+                                ng-options="dept.id as dept.name for dept in vm.departments" required>
                                 <option value="">Seleccione un departamento</option>
                             </select>
-                            <div ng-messages="vm.createEmployeeForm.department_id.$error" ng-if="(vm.createEmployeeForm.department_id.$touched && vm.createEmployeeForm.department_id.$invalid) || (vm.createEmployeeForm.department_id.$submitted && vm.createEmployeeForm.department_id.$invalid)" class="text-danger mt-1">
+                            <div ng-messages="vm.createEmployeeForm.department_id.$error"
+                                ng-if="(vm.createEmployeeForm.department_id.$touched && vm.createEmployeeForm.department_id.$invalid) || (vm.createEmployeeForm.department_id.$submitted && vm.createEmployeeForm.department_id.$invalid)"
+                                class="text-danger mt-1">
                                 <div ng-message="required">El departamento es requerido.</div>
                             </div>
                         </div>
 
                         <div class="modal-footer pb-0">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary" ng-disabled="vm.createEmployeeForm.$invalid || vm.isSavingNewEmployee">
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary"
+                                ng-disabled="vm.createEmployeeForm.$invalid || vm.isSavingNewEmployee">
                                 <span ng-if="!vm.isSavingNewEmployee">Guardar Empleado</span>
-                                <span ng-if="vm.isSavingNewEmployee"><span class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
+                                <span ng-if="vm.isSavingNewEmployee"><span
+                                        class="spinner-border spinner-border-sm me-1"></span> Guardando...</span>
                             </button>
                         </div>
                     </form>
